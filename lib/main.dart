@@ -36,7 +36,7 @@ class MyAppState extends ChangeNotifier {
   var favorites = <WordPair>[];
 
   void toggleFavorite() {
-    if( favorites.contains(current)) {
+    if (favorites.contains(current)) {
       favorites.remove(current);
     } else {
       favorites.add(current);
@@ -45,52 +45,110 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = Placeholder();
+        break;
+      default:
+        throw UnimplementedError("no widget for $selectedIndex");
+    }
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              child: NavigationRail(
+                extended: constraints.maxWidth >= 600,
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.favorite),
+                    label: Text('Favorites'),
+                  ),
+                ],
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (value) {
+                  print('selected: $value');
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class GeneratorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
     IconData icon;
-    if( appState.favorites.contains(pair) ){
+    if (appState.favorites.contains(pair)) {
       icon = Icons.favorite;
-    }else{
+    } else {
       icon = Icons.favorite_border;
     }
 
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BigCard(pair: pair),
-            SizedBox(height: 10),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children:[
-                ElevatedButton.icon(
-                  icon: Icon(icon),
-                  onPressed: () {
-                    print('Like');
-                    appState.toggleFavorite();
-                  },
-                  label: Text('Like'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    print('button pressed!');
-                    appState.getNext();
-                  },
-                  child: Text('Next'),
-                ),
-              ],
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavorite();
+                },
+                icon: Icon(icon),
+                label: Text('Like'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNext();
+                },
+                child: Text('Next'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
+
 class BigCard extends StatelessWidget {
   const BigCard({
     super.key,
