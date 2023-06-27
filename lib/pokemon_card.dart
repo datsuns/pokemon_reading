@@ -23,6 +23,8 @@ class PokemonCard extends StatelessWidget {
             String path = sprintf("sounds/%04d.mp3", [n]);
             AudioPlayer().play(AssetSource(path));
           },
+          style: ElevatedButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 30)),
           child: Text(nameK),
         ),
       ],
