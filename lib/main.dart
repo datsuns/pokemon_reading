@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pokemon_reading/pokemon_card.dart';
 import 'package:pokemon_reading/pokemon_names.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:gap/gap.dart';
 
 void main() {
   runApp(
@@ -24,6 +27,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
+  final int _scrollUnit = 50;
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ScrollOffsetController scrollOffsetController =
@@ -33,12 +37,25 @@ class _MyAppState extends State<MyApp> {
   final ScrollOffsetListener scrollOffsetListener =
       ScrollOffsetListener.create();
 
-  void _incrementCounter() {
+  void _scroll(int i) {
+    itemScrollController.scrollTo(
+      index: i,
+      duration: Duration(microseconds: 100),
+    );
+  }
+
+  void _scrollUp() {
     setState(() {
-      _currentIndex += 100;
-      itemScrollController.scrollTo(
-          index: _currentIndex, duration: Duration(microseconds: 10));
+      _currentIndex = max(_currentIndex - _scrollUnit, 0);
     });
+    _scroll(_currentIndex);
+  }
+
+  void _scrollDown() {
+    setState(() {
+      _currentIndex = min(widget.items.length, _currentIndex + _scrollUnit);
+    });
+    _scroll(_currentIndex);
   }
 
   void _itemPositionsCallback() {
@@ -72,11 +89,22 @@ class _MyAppState extends State<MyApp> {
           itemPositionsListener: itemPositionsListener,
           scrollOffsetListener: scrollOffsetListener,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              onPressed: _scrollUp,
+              tooltip: 'ScrollUp',
+              child: const Icon(Icons.keyboard_double_arrow_up),
+            ),
+            Gap(16),
+            FloatingActionButton(
+              onPressed: _scrollDown,
+              tooltip: 'ScrollDown',
+              child: const Icon(Icons.keyboard_double_arrow_down),
+            ),
+          ],
+        ),
       ),
     );
   }

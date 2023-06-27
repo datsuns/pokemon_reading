@@ -39,6 +39,7 @@ dependencies:
   sprintf: "^7.0.0"
   audioplayers: ^4.1.0
   scrollable_positioned_list: ^0.3.8
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:
