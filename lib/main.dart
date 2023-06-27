@@ -27,9 +27,6 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text(title),
         ),
-        //body: Center(
-        //  child: PokemonCard(50, "이상해풀"),
-        //),
         body: ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) {
