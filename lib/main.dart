@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_reading/pokemon_card.dart';
 import 'package:pokemon_reading/pokemon_names.dart';
+import 'package:pokemon_reading/sound_player.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:gap/gap.dart';
 
@@ -27,6 +29,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
+  SoundPlayer _player = SoundPlayer(playing: false, player: AudioPlayer());
   final int _scrollUnit = 50;
 
   final ItemScrollController itemScrollController = ItemScrollController();
@@ -81,7 +84,7 @@ class _MyAppState extends State<MyApp> {
           itemCount: widget.items.length,
           itemBuilder: (context, index) {
             int n = index + 1;
-            return PokemonCard(n, widget.names.loadj(n),
+            return PokemonCard(n, _player, widget.names.loadj(n),
                 widget.names.loadyomij(n), widget.names.loadk(n));
           },
           itemScrollController: itemScrollController,

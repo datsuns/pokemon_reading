@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_reading/sound_player.dart';
 import 'package:sprintf/sprintf.dart';
-import 'package:audioplayers/audioplayers.dart';
 
+// ignore: must_be_immutable
 class PokemonCard extends StatelessWidget {
   final int n;
   final String nameJ;
   final String yomiJ;
   final String nameK;
+  SoundPlayer player;
 
-  PokemonCard(this.n, this.nameJ, this.yomiJ, this.nameK);
+  PokemonCard(this.n, this.player, this.nameJ, this.yomiJ, this.nameK);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class PokemonCard extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             String path = sprintf("sounds/%04d.mp3", [n]);
-            AudioPlayer().play(AssetSource(path));
+            player.play(path);
           },
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 30)),
