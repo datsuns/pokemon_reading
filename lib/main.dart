@@ -43,6 +43,7 @@ class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
   SoundPlayer _player = SoundPlayer(playing: false, player: AudioPlayer());
   var indexes = <int>[];
+  TextEditingController editingController = TextEditingController();
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ScrollOffsetController scrollOffsetController =
@@ -59,7 +60,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   int toNamesIndex(int require) {
-    return min(indexes.length - 1, require) + 1;
+    if (require > indexes.length) {
+      return indexes.last;
+    }
+    return indexes[require];
   }
 
   void _scroll(int i) {
@@ -67,15 +71,18 @@ class _MyAppState extends State<MyApp> {
       index: i,
       duration: Duration(microseconds: 100),
     );
-    //var tmp = widget.names.filter("フシギ");
-    //setState(() {
-    //  indexes = tmp;
-    //});
+  }
+
+  void _setFilter(String text) {
+    setState(() {
+      indexes = widget.names.filter(text);
+    });
   }
 
   void _resetFilter() {
     setState(() {
       indexes = widget.allIndexes;
+      editingController.text = "";
     });
   }
 
@@ -97,7 +104,7 @@ class _MyAppState extends State<MyApp> {
     final visibleIndexes = itemPositionsListener.itemPositions.value
         .toList()
         .map((itemPosition) => itemPosition.index);
-    _currentIndex = visibleIndexes.first;
+    _currentIndex = visibleIndexes.isEmpty ? 0 : visibleIndexes.first;
   }
 
   @override
@@ -112,13 +119,34 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text(title),
         ),
-        body: ScrollablePositionedList.builder(
-          itemCount: indexes.length,
-          itemBuilder: generatePokemonCard,
-          itemScrollController: itemScrollController,
-          scrollOffsetController: scrollOffsetController,
-          itemPositionsListener: itemPositionsListener,
-          scrollOffsetListener: scrollOffsetListener,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (value) {
+                  _setFilter(value);
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+            ),
+            Expanded(
+              child: ScrollablePositionedList.builder(
+                itemCount: indexes.length,
+                itemBuilder: generatePokemonCard,
+                itemScrollController: itemScrollController,
+                scrollOffsetController: scrollOffsetController,
+                itemPositionsListener: itemPositionsListener,
+                scrollOffsetListener: scrollOffsetListener,
+              ),
+            )
+          ],
         ),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
