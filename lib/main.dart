@@ -124,14 +124,16 @@ class _MyAppState extends State<MyApp> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: (value) {
-                  _setFilter(value);
-                },
+                onChanged: _setFilter,
                 controller: editingController,
                 decoration: InputDecoration(
                     labelText: "Search",
                     hintText: "Search",
                     prefixIcon: Icon(Icons.search),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: _resetFilter,
+                    ),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),
@@ -151,12 +153,6 @@ class _MyAppState extends State<MyApp> {
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FloatingActionButton(
-              onPressed: _resetFilter,
-              tooltip: 'ResetFilter',
-              child: const Icon(Icons.disabled_by_default),
-            ),
-            Gap(16),
             FloatingActionButton(
               onPressed: _scrollUp,
               tooltip: 'ScrollUp',
