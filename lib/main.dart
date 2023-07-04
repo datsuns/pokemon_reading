@@ -73,6 +73,12 @@ class _MyAppState extends State<MyApp> {
     //});
   }
 
+  void _resetFilter() {
+    setState(() {
+      indexes = widget.allIndexes;
+    });
+  }
+
   void _scrollUp() {
     setState(() {
       _currentIndex = max(_currentIndex - widget.scrollUnit, 0);
@@ -108,11 +114,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: ScrollablePositionedList.builder(
           itemCount: indexes.length,
-          itemBuilder: (context, index) {
-            int n = toNamesIndex(index);
-            return PokemonCard(n, _player, widget.names.loadj(n),
-                widget.names.loadyomij(n), widget.names.loadk(n));
-          },
+          itemBuilder: generatePokemonCard,
           itemScrollController: itemScrollController,
           scrollOffsetController: scrollOffsetController,
           itemPositionsListener: itemPositionsListener,
@@ -121,6 +123,12 @@ class _MyAppState extends State<MyApp> {
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            FloatingActionButton(
+              onPressed: _resetFilter,
+              tooltip: 'ResetFilter',
+              child: const Icon(Icons.disabled_by_default),
+            ),
+            Gap(16),
             FloatingActionButton(
               onPressed: _scrollUp,
               tooltip: 'ScrollUp',
@@ -136,5 +144,11 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  Widget generatePokemonCard(context, index) {
+    int n = toNamesIndex(index);
+    return PokemonCard(n, _player, widget.names.loadj(n),
+        widget.names.loadyomij(n), widget.names.loadk(n));
   }
 }
