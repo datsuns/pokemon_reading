@@ -11,17 +11,17 @@ import 'package:gap/gap.dart';
 void main() {
   runApp(
     MyApp(
-      items: List<int>.generate(1010, (i) => i),
+      numOfItems: 1010,
       names: PokemonNames(),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  final List<int> items;
+  final int numOfItems;
   final PokemonNames names;
 
-  const MyApp({super.key, required this.items, required this.names});
+  const MyApp({super.key, required this.numOfItems, required this.names});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
 
   void _scrollDown() {
     setState(() {
-      _currentIndex = min(widget.items.length, _currentIndex + _scrollUnit);
+      _currentIndex = min(widget.numOfItems, _currentIndex + _scrollUnit);
     });
     _scroll(_currentIndex);
   }
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text(title),
         ),
         body: ScrollablePositionedList.builder(
-          itemCount: widget.items.length,
+          itemCount: widget.numOfItems,
           itemBuilder: (context, index) {
             int n = index + 1;
             return PokemonCard(n, _player, widget.names.loadj(n),

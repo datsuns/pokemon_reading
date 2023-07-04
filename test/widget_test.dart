@@ -15,7 +15,7 @@ void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp(
-      items: List<int>.generate(1010, (i) => i),
+      numOfItems: 1010,
       names: PokemonNames(),
     ));
 
