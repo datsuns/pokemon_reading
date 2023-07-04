@@ -3061,6 +3061,7 @@ class PokemonNames {
 
   List<int> filter(String text) {
     var ret = _japanese
+        .getRange(1, _japanese.length - 1)
         .where((item) => item.name.toLowerCase().contains(text.toLowerCase()))
         .map((e) => e.n)
         .toList();
