@@ -42,32 +42,32 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
   SoundPlayer _player = SoundPlayer(playing: false, player: AudioPlayer());
-  var indexes = <int>[];
-  TextEditingController editingController = TextEditingController();
+  var _indexes = <int>[];
+  TextEditingController _editingController = TextEditingController();
 
-  final ItemScrollController itemScrollController = ItemScrollController();
-  final ScrollOffsetController scrollOffsetController =
+  final ItemScrollController _itemScrollController = ItemScrollController();
+  final ScrollOffsetController _scrollOffsetController =
       ScrollOffsetController();
-  final ItemPositionsListener itemPositionsListener =
+  final ItemPositionsListener _itemPositionsListener =
       ItemPositionsListener.create();
-  final ScrollOffsetListener scrollOffsetListener =
+  final ScrollOffsetListener _scrollOffsetListener =
       ScrollOffsetListener.create();
 
   @override
   void initState() {
-    indexes = widget.allIndexes;
+    _indexes = widget.allIndexes;
     super.initState();
   }
 
-  int toNamesIndex(int require) {
-    if (require > indexes.length) {
-      return indexes.last;
+  int _toNamesIndex(int require) {
+    if (require > _indexes.length) {
+      return _indexes.last;
     }
-    return indexes[require];
+    return _indexes[require];
   }
 
   void _scroll(int i) {
-    itemScrollController.scrollTo(
+    _itemScrollController.scrollTo(
       index: i,
       duration: Duration(microseconds: 100),
     );
@@ -75,14 +75,14 @@ class _MyAppState extends State<MyApp> {
 
   void _setFilter(String text) {
     setState(() {
-      indexes = widget.names.filter(text);
+      _indexes = widget.names.filter(text);
     });
   }
 
   void _resetFilter() {
     setState(() {
-      indexes = widget.allIndexes;
-      editingController.text = "";
+      _indexes = widget.allIndexes;
+      _editingController.text = "";
     });
   }
 
@@ -95,23 +95,29 @@ class _MyAppState extends State<MyApp> {
 
   void _scrollDown() {
     setState(() {
-      _currentIndex = min(indexes.length, _currentIndex + widget.scrollUnit);
+      _currentIndex = min(_indexes.length, _currentIndex + widget.scrollUnit);
     });
     _scroll(_currentIndex);
   }
 
   void _itemPositionsCallback() {
-    final visibleIndexes = itemPositionsListener.itemPositions.value
+    final visibleIndexes = _itemPositionsListener.itemPositions.value
         .toList()
         .map((itemPosition) => itemPosition.index);
     _currentIndex = visibleIndexes.isEmpty ? 0 : visibleIndexes.first;
+  }
+
+  Widget _generatePokemonCard(context, index) {
+    int n = _toNamesIndex(index);
+    return PokemonCard(n, _player, widget.names.loadj(n),
+        widget.names.loadyomij(n), widget.names.loadk(n));
   }
 
   @override
   Widget build(BuildContext context) {
     const title = 'pokemon reading!';
 
-    itemPositionsListener.itemPositions.addListener(_itemPositionsCallback);
+    _itemPositionsListener.itemPositions.addListener(_itemPositionsCallback);
 
     return MaterialApp(
       title: title,
@@ -125,7 +131,7 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 onChanged: _setFilter,
-                controller: editingController,
+                controller: _editingController,
                 decoration: InputDecoration(
                     labelText: "Search",
                     hintText: "Search",
@@ -140,12 +146,12 @@ class _MyAppState extends State<MyApp> {
             ),
             Expanded(
               child: ScrollablePositionedList.builder(
-                itemCount: indexes.length,
-                itemBuilder: generatePokemonCard,
-                itemScrollController: itemScrollController,
-                scrollOffsetController: scrollOffsetController,
-                itemPositionsListener: itemPositionsListener,
-                scrollOffsetListener: scrollOffsetListener,
+                itemCount: _indexes.length,
+                itemBuilder: _generatePokemonCard,
+                itemScrollController: _itemScrollController,
+                scrollOffsetController: _scrollOffsetController,
+                itemPositionsListener: _itemPositionsListener,
+                scrollOffsetListener: _scrollOffsetListener,
               ),
             )
           ],
@@ -168,11 +174,5 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-  }
-
-  Widget generatePokemonCard(context, index) {
-    int n = toNamesIndex(index);
-    return PokemonCard(n, _player, widget.names.loadj(n),
-        widget.names.loadyomij(n), widget.names.loadk(n));
   }
 }
