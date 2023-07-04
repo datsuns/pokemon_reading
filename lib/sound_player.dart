@@ -17,21 +17,23 @@ class SoundPlayer {
     bool started = false;
     lock.synchronized(() {
       if (playing == false) {
-        player.onPlayerStateChanged.listen((event) {
-          switch (event) {
-            case PlayerState.completed:
-              playing = false;
-              break;
-            default:
-              playing = false;
-              break;
-          }
-        });
+        player.onPlayerStateChanged.listen(onPlayerStateChanged);
         playing = true;
         started = true;
       }
     });
     return started;
+  }
+
+  void onPlayerStateChanged(event) {
+    switch (event) {
+      case PlayerState.completed:
+        playing = false;
+        break;
+      default:
+        playing = false;
+        break;
+    }
   }
 
   void stop() {
