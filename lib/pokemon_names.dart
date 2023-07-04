@@ -3060,6 +3060,7 @@ class PokemonNames {
   }
 
   List<int> filter(String text) {
+    // [0]をemptyデータにしてしまってるので除外
     var ret = _japanese
         .getRange(1, _japanese.length - 1)
         .where((item) => item.name.toLowerCase().contains(text.toLowerCase()))
