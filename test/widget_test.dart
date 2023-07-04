@@ -17,6 +17,8 @@ void main() {
     await tester.pumpWidget(MyApp(
       numOfItems: 1010,
       names: PokemonNames(),
+      allIndexes: List<int>.generate(1010, (i) => i),
+      scrollUnit: 50,
     ));
 
     // Verify that our counter starts at 0.

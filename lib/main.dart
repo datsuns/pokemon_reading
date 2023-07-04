@@ -9,10 +9,14 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:gap/gap.dart';
 
 void main() {
+  const int numOfItems = 1010;
+  const int scrollUnit = 50;
   runApp(
     MyApp(
-      numOfItems: 1010,
+      numOfItems: numOfItems,
       names: PokemonNames(),
+      allIndexes: List<int>.generate(numOfItems, (i) => i + 1),
+      scrollUnit: scrollUnit,
     ),
   );
 }
@@ -20,8 +24,16 @@ void main() {
 class MyApp extends StatefulWidget {
   final int numOfItems;
   final PokemonNames names;
+  final List<int> allIndexes;
+  final int scrollUnit;
 
-  const MyApp({super.key, required this.numOfItems, required this.names});
+  const MyApp({
+    super.key,
+    required this.numOfItems,
+    required this.names,
+    required this.allIndexes,
+    required this.scrollUnit,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -30,7 +42,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
   SoundPlayer _player = SoundPlayer(playing: false, player: AudioPlayer());
-  final int _scrollUnit = 50;
+  var indexes = <int>[];
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ScrollOffsetController scrollOffsetController =
@@ -40,23 +52,37 @@ class _MyAppState extends State<MyApp> {
   final ScrollOffsetListener scrollOffsetListener =
       ScrollOffsetListener.create();
 
+  @override
+  void initState() {
+    indexes = widget.allIndexes;
+    super.initState();
+  }
+
+  int toNamesIndex(int require) {
+    return min(indexes.length - 1, require) + 1;
+  }
+
   void _scroll(int i) {
     itemScrollController.scrollTo(
       index: i,
       duration: Duration(microseconds: 100),
     );
+    //var tmp = widget.names.filter("フシギ");
+    //setState(() {
+    //  indexes = tmp;
+    //});
   }
 
   void _scrollUp() {
     setState(() {
-      _currentIndex = max(_currentIndex - _scrollUnit, 0);
+      _currentIndex = max(_currentIndex - widget.scrollUnit, 0);
     });
     _scroll(_currentIndex);
   }
 
   void _scrollDown() {
     setState(() {
-      _currentIndex = min(widget.numOfItems, _currentIndex + _scrollUnit);
+      _currentIndex = min(indexes.length, _currentIndex + widget.scrollUnit);
     });
     _scroll(_currentIndex);
   }
@@ -81,9 +107,9 @@ class _MyAppState extends State<MyApp> {
           title: const Text(title),
         ),
         body: ScrollablePositionedList.builder(
-          itemCount: widget.numOfItems,
+          itemCount: indexes.length,
           itemBuilder: (context, index) {
-            int n = index + 1;
+            int n = toNamesIndex(index);
             return PokemonCard(n, _player, widget.names.loadj(n),
                 widget.names.loadyomij(n), widget.names.loadk(n));
           },
