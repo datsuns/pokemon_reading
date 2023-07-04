@@ -3060,16 +3060,11 @@ class PokemonNames {
   }
 
   List<int> filter(String text) {
-    var tmp = _japanese
-        .where((item) => item.name.toLowerCase().contains(text.toLowerCase()))
-        .toList();
-    print("filter $text -> $tmp");
-
     var ret = _japanese
         .where((item) => item.name.toLowerCase().contains(text.toLowerCase()))
         .map((e) => e.n)
         .toList();
-    print("ret $ret");
+    //print("ret $ret");
     return ret;
   }
 }
