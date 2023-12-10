@@ -1,10 +1,12 @@
 class PokemonName {
+  int indexForFilter;
   final int n;
   final int n2;
   final String name;
   final String name2;
-  const PokemonName(
-      {required this.n,
+  PokemonName(
+      {this.indexForFilter = 0,
+      required this.n,
       required this.n2,
       required this.name,
       required this.name2});
@@ -3785,6 +3787,9 @@ class PokemonNames {
     _korean.add(PokemonName(n: 1008, n2: 0, name: "미라이돈", name2: ""));
     _korean.add(PokemonName(n: 1009, n2: 0, name: "굽이치는물결", name2: ""));
     _korean.add(PokemonName(n: 1010, n2: 0, name: "무쇠잎새", name2: ""));
+    for (int i = 0; i < _japanese.length; i++) {
+      _japanese[i].indexForFilter = i;
+    }
   }
 
   int loadn(int index) {
@@ -3824,7 +3829,7 @@ class PokemonNames {
     var ret = _japanese
         .getRange(1, _japanese.length - 1)
         .where((item) => item.name.toLowerCase().contains(text.toLowerCase()))
-        .map((e) => e.n)
+        .map((e) => e.indexForFilter)
         .toList();
     //print("ret $ret");
     return ret;
