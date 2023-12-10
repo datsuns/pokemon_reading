@@ -109,8 +109,16 @@ class _MyAppState extends State<MyApp> {
 
   Widget _generatePokemonCard(context, index) {
     int n = _toNamesIndex(index);
-    return PokemonCard(widget.names.loadn(n), widget.names.loadn2(n), _player, widget.names.loadj(n),
-        widget.names.loadyomij(n), widget.names.loadk(n));
+    return PokemonCard(
+        widget.names.loadn(n),
+        widget.names.loadn2(n),
+        _player,
+        widget.names.loadj(n),
+        widget.names.loadj2(n),
+        widget.names.loadyomij(n),
+        widget.names.loadyomij2(n),
+        widget.names.loadk(n),
+        widget.names.loadk2(n));
   }
 
   @override

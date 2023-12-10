@@ -7,12 +7,16 @@ class PokemonCard extends StatelessWidget {
   final int n;
   final int n2;
   final String nameJ;
+  final String nameJ2;
   final String yomiJ;
+  final String yomiJ2;
   final String nameK;
+  final String nameK2;
   final String img;
   SoundPlayer player;
 
-  PokemonCard(this.n, this.n2, this.player, this.nameJ, this.yomiJ, this.nameK)
+  PokemonCard(this.n, this.n2, this.player, this.nameJ, this.nameJ2, this.yomiJ,
+      this.yomiJ2, this.nameK, this.nameK2)
       : img = buildImagePath(n, n2);
 
   static String buildImagePath(int n, int n2) {
@@ -23,13 +27,29 @@ class PokemonCard extends StatelessWidget {
     }
   }
 
+  String buildCardTitle() {
+    if (nameJ2 == "") {
+      return sprintf("%s (%s)", [nameJ, yomiJ]);
+    } else {
+      return sprintf("%s (%s)\n%s (%s)", [nameJ, yomiJ, nameJ2, yomiJ2]);
+    }
+  }
+
+  String buildButtonTitle() {
+    if (nameK2 == "") {
+      return nameK;
+    } else {
+      return sprintf("%s\n(%s)", [nameK, nameK2]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
         child: Column(
       children: [
         ListTile(title: Text(sprintf("No.%04d", [n]))),
-        ListTile(title: Text(sprintf("%s (%s)", [nameJ, yomiJ]))),
+        ListTile(title: Text(buildCardTitle())),
         Image.asset(img),
         ElevatedButton(
           onPressed: () {
@@ -38,7 +58,7 @@ class PokemonCard extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 30)),
-          child: Text(nameK),
+          child: Text(buildButtonTitle()),
         ),
       ],
     ));
