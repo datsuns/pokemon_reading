@@ -9,7 +9,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:gap/gap.dart';
 
 void main() {
-  const int numOfItems = 1010;
+  const int numOfItems = 1202;
   const int scrollUnit = 50;
   runApp(
     MyApp(
@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget _generatePokemonCard(context, index) {
     int n = _toNamesIndex(index);
-    return PokemonCard(n, _player, widget.names.loadj(n),
+    return PokemonCard(widget.names.loadn(n), widget.names.loadn2(n), _player, widget.names.loadj(n),
         widget.names.loadyomij(n), widget.names.loadk(n));
   }
 
