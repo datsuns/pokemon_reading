@@ -27,19 +27,32 @@ class PokemonCard extends StatelessWidget {
     }
   }
 
-  String buildCardTitle() {
+  Widget buildCardTitle() {
     if (nameJ2 == "") {
-      return sprintf("%s (%s)", [nameJ, yomiJ]);
+      return ListTile(
+        title: Text(sprintf("%s (%s)", [nameJ, yomiJ])),
+      );
     } else {
-      return sprintf("%s (%s)\n%s (%s)", [nameJ, yomiJ, nameJ2, yomiJ2]);
+      return ListTile(
+        title: Text(sprintf("%s (%s)", [nameJ, yomiJ])),
+        subtitle: Text(sprintf("%s(%s)", [nameJ2, yomiJ2])),
+      );
     }
   }
 
-  String buildButtonTitle() {
+  Widget buildButtonTitle() {
     if (nameK2 == "") {
-      return nameK;
+      return Text(nameK);
     } else {
-      return sprintf("%s\n(%s)", [nameK, nameK2]);
+      return Column(
+        children: [
+          Text(sprintf("%s", [nameK])),
+          Text(
+            sprintf("(%s)", [nameK2]),
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
+      );
     }
   }
 
@@ -49,7 +62,7 @@ class PokemonCard extends StatelessWidget {
         child: Column(
       children: [
         ListTile(title: Text(sprintf("No.%04d", [n]))),
-        ListTile(title: Text(buildCardTitle())),
+        buildCardTitle(),
         Image.asset(img),
         ElevatedButton(
           onPressed: () {
@@ -58,7 +71,7 @@ class PokemonCard extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 30)),
-          child: Text(buildButtonTitle()),
+          child: buildButtonTitle(),
         ),
       ],
     ));
